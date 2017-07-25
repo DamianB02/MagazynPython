@@ -1,0 +1,15 @@
+{% extends 'poczatek.html' %}
+{% block content %}
+{% load bootstrap %}
+{% if user.is_authenticated %}
+<div>
+  <h1 id="formtowar" class="text-center">Dodanie nowego towaru:</h1>
+  <form role="form" method="POST" action="{% url 'listatowarow' %}" >{% csrf_token %}
+    <fieldset class="scheduler-border">
+      {{ form|bootstrap_horizontal }}
+        <button type="submit" class="save btn btn-default">Dodaj</button>
+    </fieldset>
+  </form>
+</div>
+{% endif %} 
+{% endblock %}

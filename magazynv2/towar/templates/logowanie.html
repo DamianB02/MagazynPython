@@ -1,0 +1,14 @@
+{% extends 'poczatek.html' %}
+{% block content %}
+{% load bootstrap %}
+<div>    
+  <h1 id="logowanie" class="text-center">Logowanie</h1>
+  <form role="form" method="POST" action="{% url 'listatowarow' %}" >{% csrf_token %}
+    <fieldset class="scheduler-border">
+      <legend name="logowanie" class="scheduler-border">Logowanie:</legend>
+      {{ log|bootstrap_horizontal }}
+      <button type="submit" class="save btn btn-default">Zaloguj</button>
+    </fieldset>
+  </form>
+</div>
+{% endblock content %}

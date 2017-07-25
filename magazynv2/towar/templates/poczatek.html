@@ -1,0 +1,53 @@
+<html>
+  <head>
+  {% load static %}
+<!-- <script type="text/javascript" charset="utf8" src="/js/jquery.dataTables.js"></script>
+<script type="text/javascript" charset="utf8" src="/js/dataTables.bootstrap.js"></script>  --> 
+<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css"> 
+
+<link href='{% static "css/dataTables.bootstrap.min.css" %}' rel="stylesheet">
+    <title>Magazyn</title>
+  </head>
+      <body>
+      <style type="text/css">
+  body {
+    padding-top: 70px;
+  }
+</style>
+      <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <p class="navbar-text">Magazyn</p>
+    </div>
+ 
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-2">
+      <ul class="nav navbar-nav">
+        <li><a href="{% url 'listatowarow' %}">Lista towarow</a></li>
+        {% if not user.is_authenticated %}
+        <li><a href="{% url 'logowanie' %}">Logowanie</a></li>
+        {% endif %}
+        {% if user.is_authenticated %}
+        <li><a href="{% url 'dodanieTowaru' %}">Dodawanie towarow</a></li>
+        <li><a href="{% url 'daneUzytkownika' %}">Dane uzytkownika</a></li>
+        <li><a href="{% url 'edycjaUzytkownika' %}">Edycja danych uzytkownika</a></li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li><p class="navbar-text">Jestes zalogowany jako {{user.username}}</p></li>
+        <li><a href="{% url 'wyloguj' %}">Wyloguj</a></li>
+        {% endif %}
+      </ul>
+    </div><!-- /.navbar-collapse -->
+  </div><!-- /.container-fluid -->
+</nav>
+  {% block content %}
+            {% endblock %}
+            <script src='{% static "js/jquery.js" %}'></script>
+            <script src='{% static "js/bootstrap.min.js" %}'></script>
+            <script src='{% static "js/jquery.dataTables.min.js" %}'></script>
+            <script src='{% static "js/dataTables.bootstrap.min.js" %}'></script>
+<script>
+$('#mydata').dataTable();
+</script>
+         </body>
+  </html>

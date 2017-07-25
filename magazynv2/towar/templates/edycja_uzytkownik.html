@@ -1,0 +1,13 @@
+{% extends 'poczatek.html' %}
+{% block content %}
+{% load bootstrap %}
+<div>
+  <h1 id="edycjauser" class=text-center >Edycja podstawowych danych uzytkownika</h1> 
+  <form role="form" method="POST" action="{% url 'daneUzytkownika' %}" >{% csrf_token %}
+    <fieldset class="scheduler-border">
+      {{ uzytkownik|bootstrap_horizontal }}
+      <button type="submit" class="save btn btn-default">Edytuj</button>
+    </fieldset>
+  </form>
+</div>
+{% endblock content %}

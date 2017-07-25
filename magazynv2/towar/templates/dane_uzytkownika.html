@@ -1,0 +1,10 @@
+{% extends 'poczatek.html' %}
+{% block content %}
+{% load bootstrap %}
+<div class=text-center>
+  <h1 id="daneuser" >Dane uzytkownika</h1> 
+  <p>Imie: {{ user.first_name }}</p>
+  <p>Nazwisko: {{user.last_name }}</p>
+  <p>Email: {{user.email }}</p>   
+</div>
+{% endblock content %}

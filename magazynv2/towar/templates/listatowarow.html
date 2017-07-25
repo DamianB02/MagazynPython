@@ -1,0 +1,36 @@
+{% extends 'poczatek.html' %}
+{% block content %}
+
+{% load bootstrap %}
+<div>
+  <h1 id="listatowar" class="text-center">Lista towarow</h1>
+  <table id="mydata" class="table">
+    <thead>
+      <tr>
+        <th>Nazwa towaru</th>
+        <th>Ilosc</th>
+        <th>Data wprowadzenia</th>
+        <th>Osoba wprowadzajaca</th>
+        <th>Uwagi</th>
+        {% if user.is_authenticated %}
+        <th>Operacje</th>
+        {% endif%}
+      </tr>
+     </thead>
+     <tbody id=myTable>
+     {% for lista in listatowarow %}
+      <tr>
+        <td>{{lista.name}}</td>
+        <td>{{lista.ilosc}}</td>
+        <td>{{lista.data_wprowadzenia}}</td>
+        <td>{{lista.osoba_wprowadzajaca}}</td>
+        <td>{{lista.uwagi}}</td>
+        {% if user.is_authenticated %}
+        <td><a class="btn btn-danger" href="?pk={{ lista.pk }} "><i class="fa fa-trash-o fa-lg"></i> USUN!</a></td>
+        {% endif %}
+      </tr>
+      {% endfor %}
+     </tbody>
+  </table>
+</div>
+{% endblock content %}
