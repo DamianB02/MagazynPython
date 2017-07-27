@@ -42,7 +42,7 @@
         <li><a href="{% url 'logowanie' %}">Logowanie</a></li>
         {% else %}
         <li><p class="navbar-text">Jestes zalogowany jako {{user.username}}</p></li>
-        <li><a href="{% url 'wyloguj' %}">Wyloguj</a></li>
+        <li><a id="wyloguj" href="{% url 'wyloguj' %}">Wyloguj</a></li>
         {% endif %}
       </ul>
     </div><!-- /.navbar-collapse -->

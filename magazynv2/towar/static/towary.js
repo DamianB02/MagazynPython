@@ -5,7 +5,53 @@ function init()
 	$("#formDodajTowar").on("click",onDodajTowarClick);
 	
 	$("#formDaneUzytkownik").on("click",onEdycjaDaneUzytkownika);
+	
+	$("#formLogin").on("click",onLogowanie);
+	
+	$("#wyloguj").on("click",onWyloguj);
 	}
+
+function onWyloguj(e){
+	e.preventDefault();
+	e.stopPropagation();
+	
+	$.ajax({
+		url: "wyloguj",
+		type: "POST"
+	}).done(onWylogujSucess);
+};
+
+function onWylogujSucess(resp){
+	window.location.href = "http://127.0.0.1:8000/";
+	};
+
+function onLogowanie(e){
+	e.preventDefault();
+	e.stopPropagation();
+	var $inputs = $("#logowanie input");
+	var data={};
+	$inputs.removeClass("error-validation");
+	$inputs.each(function(){
+		var $this = $(this);
+		var name = $this.attr("name");
+		if(name=="login" && $this.val()=="")
+			$this.addClass("error-validation");
+		else if (name=="haslo" && $this.val()=="")
+			$this.addClass("error-validation");
+		else
+			data[name]=$this.val();
+	});
+	if ($inputs.filter(".error-validation").length)
+		return
+	$.ajax({
+		url: "sprLogowanie",
+		type: "POST",
+		data: data
+	}).done(onLogowanieSucess);
+};
+function onLogowanieSucess(resp){
+	window.location.href = "http://127.0.0.1:8000/";
+	};
 
 function onEdycjaDaneUzytkownika(e){
 	e.preventDefault();

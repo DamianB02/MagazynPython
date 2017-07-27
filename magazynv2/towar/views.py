@@ -30,41 +30,33 @@ def index(request):
         post = get_object_or_404(Towar,pk=pk)
         post.delete()
         return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/')) 
-    print request.POST
-    if request.method == "POST":
-        
-        if not request.user.is_authenticated():
-            log = Logowanie(request.POST or None)
-            username = request.POST['username']
-            password = request.POST['password']
-            user = authenticate(username=username, password=password)
-            if user is not None:
-                login(request, user)
-                return render(request,'listatowarow.html',{'listatowarow': lista_towarow})
-            return render(request,'logowanie.html',{'log': log})
-        else:    
-            form = TowarForm(request.POST or None)        
-            if form.is_valid():
-                print "dziala"
-                post = form.save(commit=False)
-                post.osoba_wprowadzajaca = request.user
-                post.data_wprowadzenia = timezone.now()
-                post.save()
-                return render(request,'listatowarow.html',{'listatowarow': lista_towarow})
-            else:
-                return render(request,'dodanie_towaru.html',{'form': form})
     return render(request,'listatowarow.html',{'listatowarow': lista_towarow})
     
     
 def form_logowanie(request):
     if not request.user.is_authenticated():
-        log = Logowanie(request.POST or None)
-        return render(request,'logowanie.html',{'log': log,})
+        return render(request,'logowanie.html')
     return HttpResponseRedirect("/")
 
 
+def spr_logowanie(request):
+    if not request.user.is_authenticated():
+        if request.method == "POST":
+            try:
+                username = request.POST.get('login')
+                password = request.POST.get('haslo')
+                user = authenticate(username=username, password=password)
+                if user is not None:
+                    login(request, user)
+            except Exception as e:
+                print e
+                return HttpResponse(e.message)
+                          
+        return HttpResponse("OK")
+    else:
+        return HttpResponse("Jestes zalogowany")
+
 def zmiana_dane_uzytkownik(request):
-    print request.POST
     if request.user.is_authenticated():
         if request.method == "POST":
             try:
@@ -123,7 +115,11 @@ def form_towar(request):
 
 
 def wyloguj(request):
-    logout(request)
-    return HttpResponseRedirect("/")
+    try:
+        logout(request)
+    except Exception as e:
+        print e
+        return HttpResponse(e.message)
+    return HttpResponse("OK")
     
     
