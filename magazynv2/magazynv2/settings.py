@@ -39,7 +39,7 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'towar',
      'bootstrapform',
-     'jquery',
+     'magazynv2',
 )
 
 MIDDLEWARE_CLASSES = (

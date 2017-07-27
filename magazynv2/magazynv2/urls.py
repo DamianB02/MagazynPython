@@ -1,16 +1,20 @@
 from django.conf.urls import include, url
 from django.contrib import admin
+from django.conf import settings
+from django.conf.urls.static import static
 
 urlpatterns = [
     # Examples:
     # url(r'^$', 'magazynv2.views.home', name='home'),
     # url(r'^blog/', include('blog.urls')),
     url(r'^wyloguj$', 'towar.views.wyloguj', name = 'wyloguj'),
-    url(r'^edycjaUzytkownika$', 'towar.views.form_uzytkownik', name = 'edycjaUzytkownika'),
+    url(r'^formUzytkownik$', 'towar.views.form_uzytkownik', name = 'formUzytkownik'),
+    url(r'^zmianadaneUzytkownika$', 'towar.views.zmiana_dane_uzytkownik', name = 'zmianaDaneUzytkownik'),
     url(r'^daneUzytkownika$', 'towar.views.dane_uzytkownika', name = 'daneUzytkownika'),
+    url(r'^dodanieNowegoTowaru$', 'towar.views.dodanie_nowego_towaru', name = 'dodanieNowegoTowaru'),
     url(r'^dodanieTowaru$', 'towar.views.form_towar', name = 'dodanieTowaru'),
     url(r'^logowanie$', 'towar.views.form_logowanie', name = 'logowanie'),
     url(r'^admin/', include(admin.site.urls)),
     url(r'^$','towar.views.index',name='listatowarow'),
     
-]
+] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
