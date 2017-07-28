@@ -1,6 +1,6 @@
 function init()
 	{
-	$("#formEdycja").on("click",onEdycjaClick);
+	$("#formHasloUzytkownik").on("click",onZmianaHasla);
 	
 	$("#formDodajTowar").on("click",onDodajTowarClick);
 	
@@ -50,7 +50,13 @@ function onLogowanie(e){
 	}).done(onLogowanieSucess);
 };
 function onLogowanieSucess(resp){
-	window.location.href = "http://127.0.0.1:8000/";
+	console.log(resp);
+	if(resp=="OK")
+		window.location.href = "http://127.0.0.1:8000/";
+	else{
+		alert(resp);
+	}
+		
 	};
 
 function onEdycjaDaneUzytkownika(e){
@@ -67,6 +73,10 @@ function onEdycjaDaneUzytkownika(e){
 		else if (name=="email"){
 			$this.addClass("error-validation");
 		}
+		else if(name=="imie" && /[0-9]+/.test($this.val()))
+			$this.addClass("error-validation");
+		else if(name=="nazwisko" && /[0-9]+/.test($this.val()))
+			$this.addClass("error-validation");
 		else data[name]=$this.val();
 			
 	});
@@ -95,7 +105,8 @@ function onDodajTowarClick(e){
 		var $this = $(this);
 		var name = $this.attr("name");
 		if (name=="nazwaTowaru" && $this.val()=="")
-			$this.addClass("error-validation")
+			$this.addClass("error-validation");
+//			$this.next(".komunikat").text("Wymagane pole!").addClass("alert alert-danger");
 		else if(name=="ilosc" && $this.val()=="")
 			$this.addClass("error-validation")
 		else
@@ -115,20 +126,29 @@ function onDodajSucess(resp){
 	window.location.href = "http://127.0.0.1:8000/";
 }
 
-function onEdycjaClick(e)
+function onZmianaHasla(e)
 {
 	e.preventDefault();
 	e.stopPropagation();
-	var $inputs = $("#hasloForms input");
+	var $inputs = $("#hasloUzytkownik input");
+	$inputs.removeClass("error-validation");
 	var data={};
 	$inputs.each(function(){
 		var $this = $(this);
 		var name = $this.attr("name");
-		data[name]=$this.val();
+		if (name=="stareHaslo" && $this.val()=="")
+			$this.addClass("error-validation");
+		else if (name=="noweHaslo" && ($this.val()=="" || $this.val()==data["stareHaslo"]))
+			$this.addClass("error-validation");
+		else if (name=="powtorzHaslo" && ($this.val()=="" || $this.val()==data["stareHaslo"] || $this.val()!=data["noweHaslo"]))
+			$this.addClass("error-validation");
+		else
+			data[name]=$this.val();
 	});
-	
+	if ($inputs.filter(".error-validation").length)
+		return
 	$.ajax({
-		url:"daneUzytkownika",
+		url:"zmianaHasla",
 		type:"POST",
 		data: data
 	}).done(onEdycjaSucess);
@@ -136,7 +156,10 @@ function onEdycjaClick(e)
 }
 
 function onEdycjaSucess(resp){
-	console.log("dziala");
+	if (resp!="OK")
+		alert(resp);
+	else
+		window.location.href = "http://127.0.0.1:8000/daneUzytkownika";
 }
 
 $(window).on("load", init);

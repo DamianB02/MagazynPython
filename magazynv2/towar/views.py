@@ -1,6 +1,5 @@
 from django.contrib.auth import authenticate, login , logout
 from django.contrib.auth.models import  User
-from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.http import HttpResponseRedirect
 from django.http.response import HttpResponse
 from django.shortcuts import render, get_object_or_404
@@ -8,10 +7,7 @@ from django.template.context_processors import request
 from django.utils import timezone
 import re
 
-from towar.forms import Logowanie, EdycjaUzytkownika, ZmianaHasla
 from towar.models import *
-
-from .forms import TowarForm
 
 
 def index(request):
@@ -31,6 +27,29 @@ def index(request):
         post.delete()
         return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/')) 
     return render(request,'listatowarow.html',{'listatowarow': lista_towarow})
+
+
+def zmiana_hasla(request):
+    if request.user.is_authenticated():
+        if request.method == "POST":
+            try:
+                user = request.user
+                user2 = request.user
+                if user.password==user2.password:  
+                    user.set_password(request.POST.get("noweHaslo"))   
+                    user.save()
+                    u = authenticate(username=user.username, password=request.POST.get("noweHaslo"))
+                if u is not None:
+                    login(request, u)
+                else:
+                    return HttpResponse("Niepoprawne haslo")
+            except Exception as e:
+                print e
+                return HttpResponse(e.message)
+                          
+        return HttpResponse("OK")
+    else:
+        return HttpResponse("Nie jest zalogowany")
     
     
 def form_logowanie(request):
@@ -48,11 +67,14 @@ def spr_logowanie(request):
                 user = authenticate(username=username, password=password)
                 if user is not None:
                     login(request, user)
+                    return HttpResponse("OK")
+                else:
+                    return HttpResponse("Podane zle dane")
             except Exception as e:
                 print e
                 return HttpResponse(e.message)
                           
-        return HttpResponse("OK")
+        
     else:
         return HttpResponse("Jestes zalogowany")
 

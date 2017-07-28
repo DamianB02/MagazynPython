@@ -13,6 +13,7 @@ urlpatterns = [
     url(r'^daneUzytkownika$', 'towar.views.dane_uzytkownika', name = 'daneUzytkownika'),
     url(r'^dodanieNowegoTowaru$', 'towar.views.dodanie_nowego_towaru', name = 'dodanieNowegoTowaru'),
     url(r'^dodanieTowaru$', 'towar.views.form_towar', name = 'dodanieTowaru'),
+    url(r'^zmianaHasla$', 'towar.views.zmiana_hasla', name = 'zmianaHasla'),
     url(r'^logowanie$', 'towar.views.form_logowanie', name = 'logowanie'),
     url(r'^sprLogowanie$', 'towar.views.spr_logowanie', name = 'sprLogowanie'),
     url(r'^admin/', include(admin.site.urls)),
