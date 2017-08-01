@@ -1,0 +1,66 @@
+{% extends 'poczatek.html' %}
+{% block content %}
+{% load bootstrap %}
+<div class="container-fluid">
+  <h1 id="edycjauser" class=text-center >Dane uzytkownika </h1> 
+  <form class="form-horizontal role="form" method="POST" action="" >{% csrf_token %}
+    <fieldset id="wszystkieDaneUzytkownika" class="scheduler-border">
+      <div class="form-group">
+        <label class="control-label col-sm-2" for="id">Id:</label>
+        <div class="col-sm-10">
+          <input type="text" class="form-control" id="id" name="id" readonly="readonly" value="{{szczegoly.id}}">
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="control-label col-sm-2" for="login">Login:</label>
+        <div class="col-sm-10">
+          <input type="text" class="form-control" id="login" name="login"  value="{{szczegoly.username}}">
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="control-label col-sm-2" for="imie">Imie:</label>
+        <div class="col-sm-10">
+          <input type="text" class="form-control" id="imie" name="imie"  value="{{szczegoly.first_name}}">
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="control-label col-sm-2" for="nazwisko">Nazwisko:</label>
+        <div class="col-sm-10">
+          <input type="text" class="form-control" id="nazwisko" name="nazwisko"  value="{{szczegoly.last_name}}">
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="control-label col-sm-2" for="email">Email:</label>
+        <div class="col-sm-10">
+          <input type="email" class="form-control" id="email" name="email"  value="{{szczegoly.email}}">
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="control-label col-sm-2" for="dataZalozenia">Data zalozenia:</label>
+        <div class="col-sm-10">
+          <input type="text" class="form-control" id="dataZalozenia" name="dataZalozenia" readonly="readonly"  value="{{szczegoly.date_joined}}">
+        </div>
+      </div>
+       <div class="form-group">
+        <label class="control-label col-sm-2" for="ostatnieLogowanie">Ostatnie logowanie:</label>
+        <div class="col-sm-10">
+          <input type="text" class="form-control" id="ostatnieLogowanie" name="ostatnieLogowanie" readonly="readonly"  value="{{szczegoly.last_login}}">
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="control-label col-sm-2" for="admin">Admin:</label>
+        <div class="col-sm-10">
+          <input type="text" class="form-control" id="admin" name="admin"  value="{{szczegoly.is_superuser}}">
+        </div>
+      </div>
+      <!-- <div class="form-group">
+        <div class="col-sm-offset-2 col-sm-10">
+          <button id="formWszystkieDaneUzytkownika" type="submit" class="save btn btn-default">Edytuj</button>
+        </div>
+      </div> -->
+    </fieldset>
+  </form>
+</div>
+
+
+{% endblock content %}

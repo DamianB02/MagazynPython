@@ -1,19 +1,20 @@
 <html>
   <head>
   {% load static %}
-<!-- <script type="text/javascript" charset="utf8" src="/js/jquery.dataTables.js"></script>
-<script type="text/javascript" charset="utf8" src="/js/dataTables.bootstrap.js"></script>  --> 
+<link rel="stylesheet" href='{% static "css/bootstrap.min.css" %}'>
+<link rel="stylesheet" href='{% static "css/bootstrap-theme.min.css" %}'> 
+<link href='{% static "css/dataTables.bootstrap.min.css" %}' rel="stylesheet">
+<link href='{% static "towary.css" %}' rel="stylesheet">
+
 <script src='{% static "jquery-3.2.1.min.js" %}'></script>
 <script src='{% static "js/jquery.dataTables.min.js" %}'></script>
 <script src='{% static "js/dataTables.bootstrap.min.js" %}'></script>
+<script src='{% static "js/bootstrap.min.js" %}'></script>
 <script src='{% static "towary.js" %}'></script>
 <script>$.ajaxSetup({data:{csrfmiddlewaretoken:"{{csrf_token}}"}})</script>
 
 
-<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
-<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css"> 
-<link href='{% static "css/dataTables.bootstrap.min.css" %}' rel="stylesheet">
-<link href='{% static "towary.css" %}' rel="stylesheet">
+
     <title>Magazyn</title>
   </head>
       <body>
@@ -22,8 +23,9 @@
     padding-top: 70px;
   }
 </style>
-      <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
-  <div class="container-fluid">
+      
+ <div class="container-fluid">
+  <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
     <div class="navbar-header">
       <p class="navbar-text">Magazyn</p>
     </div>
@@ -36,6 +38,15 @@
         <li><a href="{% url 'formUzytkownik' %}">Edycja danych uzytkownika</a></li>
          <li><a href="{% url 'daneUzytkownika' %}">Dane uzytkownika</a></li>
         {% endif %}
+        {% if user.is_superuser %}
+        <li class="dropdown">
+          <a href="#" class="dropdown-collapse" data-toggle="dropdown">Panel administratora <span class="caret"></span></a>
+          <ul class="dropdown-menu" role="menu">
+          <li><a id="listaUzytkownikow" href="{% url 'listaUzytkownikow' %}">Lista uzytkownikow</a></li>
+          <li><a id="logi" href="">Logi</a></li>
+          </ul>
+        </li>
+        {% endif %}
       </ul>
       <ul class="nav navbar-nav navbar-right">
       {% if not user.is_authenticated %}
@@ -44,10 +55,12 @@
         <li><p class="navbar-text">Jestes zalogowany jako {{user.username}}</p></li>
         <li><a id="wyloguj" href="{% url 'wyloguj' %}">Wyloguj</a></li>
         {% endif %}
+        
       </ul>
     </div><!-- /.navbar-collapse -->
-  </div><!-- /.container-fluid -->
-</nav>
+    </nav>
+ </div><!-- /.container-fluid -->
+
   {% block content %}
             {% endblock %}
             

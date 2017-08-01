@@ -1,7 +1,7 @@
 {% extends 'poczatek.html' %}
 {% block content %}
 {% load bootstrap %}
-<div>
+<div class="container-fluid">
   <h1 id="formtowar" class="text-center">Dodanie nowego towaru:</h1>
   <form class="form-horizontal role="form" method="POST" action="{% url 'listatowarow' %}" >{% csrf_token %}
     <fieldset id="dodajTowar" class="scheduler-border">

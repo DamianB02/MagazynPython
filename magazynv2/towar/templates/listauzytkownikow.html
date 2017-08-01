@@ -1,0 +1,34 @@
+{% extends 'poczatek.html' %}
+{% block content %}
+
+{% load bootstrap %}
+<div class="container-fluid">
+  <h1 id="listatowar" class="text-center">Lista uzytkownikow</h1>
+  <table id="mydata" class="table table-striped table-bordered">
+    <thead>
+      <tr>
+        <th>login</th>
+        <th>Imie</th>
+        <th>Nazwisko</th>
+        <th>Mail</th>
+        <th>Kiedy dodany</th>
+        <th>Ostatnie logowanie</th>
+        <th>Szczegoly</th>  
+      </tr>
+     </thead>
+     <tbody id=myTable>
+     {% for lista in listauzytkownikow %}
+      <tr>
+        <td>{{lista.username}}</td>
+        <td>{{lista.first_name}}</td>
+        <td>{{lista.last_name}}</td>
+        <td>{{lista.email}}</td>
+        <td>{{lista.date_joined}}</td>
+        <td>{{lista.last_login}}</td>
+        <td><a class="btn btn-primary" href="{% url 'szczegolyUzytkownika' %}?pk={{ lista.pk }}"><i class="fa fa-trash-o fa-lg"></i> Szczegoly</a></td>
+      </tr>
+      {% endfor %}
+     </tbody>
+  </table>
+</div>
+{% endblock content %}

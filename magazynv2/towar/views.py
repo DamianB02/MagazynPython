@@ -29,6 +29,25 @@ def index(request):
     return render(request,'listatowarow.html',{'listatowarow': lista_towarow})
 
 
+def szczegoly_uzytkownika(request):
+    if request.user.is_superuser:
+        pk = request.GET.get('pk')
+        if pk!=None:
+            post = get_object_or_404(User,pk=pk)
+            
+            return render(request,'wszystkie_dane_uzytkownika.html',{'szczegoly': post})
+        return HttpResponseRedirect("/")
+    return HttpResponseRedirect("/")
+
+
+def lista_uzytkownikow(request):
+    if request.user.is_superuser:
+        lista_uzytkownikow = User.objects.all().filter(is_superuser=False)
+    
+        return render(request,'listauzytkownikow.html',{'listauzytkownikow': lista_uzytkownikow})
+    else:
+        return HttpResponseRedirect("/")
+
 def zmiana_hasla(request):
     if request.user.is_authenticated():
         if request.method == "POST":
