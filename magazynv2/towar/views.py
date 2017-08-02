@@ -20,14 +20,27 @@ def index(request):
 #         users = paginator.page(1)
 #     except EmptyPage:
 #         users = paginator.page(paginator.num_pages)
-        
-    pk = request.GET.get('pk')
-    if pk!=None:
-        post = get_object_or_404(Towar,pk=pk)
-        post.delete()
-        return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/')) 
     return render(request,'listatowarow.html',{'listatowarow': lista_towarow})
 
+
+def remove(request):
+    if request.user.is_authenticated():
+        id = request.POST.get("id");
+        try:
+            post = get_object_or_404(Towar,pk=id)
+            commodity = post.name
+            username = request.user
+            action = "Usuniecie"
+            id_commodity = id
+            log = Log(username=username,action=action,commodity=commodity,id_commodity=id_commodity)
+            log.save() 
+            post.delete()     
+        except Exception as e:
+                print e
+                return HttpResponse(e.message)
+        return HttpResponse("OK")
+    else:
+        return HttpResponse("Nie jestes zalogowany")
 
 def szczegoly_uzytkownika(request):
     if request.user.is_superuser:
@@ -42,7 +55,7 @@ def szczegoly_uzytkownika(request):
 
 def lista_uzytkownikow(request):
     if request.user.is_superuser:
-        lista_uzytkownikow = User.objects.all().filter(is_superuser=False)
+        lista_uzytkownikow = User.objects.all()
     
         return render(request,'listauzytkownikow.html',{'listauzytkownikow': lista_uzytkownikow})
     else:
@@ -115,7 +128,6 @@ def zmiana_dane_uzytkownik(request):
         return HttpResponse("Nie jest zalogowany")
 
 def dodanie_nowego_towaru(request):
-    print request.POST
     if request.user.is_authenticated():
         if request.method == "POST":
             try:
@@ -124,12 +136,18 @@ def dodanie_nowego_towaru(request):
                 kategoria = request.POST.get("kategoria")
                 uwagi = request.POST.get("uwagi")
                 osoba_wprowadzajaca = request.user
+                commodity = nazwa
+                username = request.user
+                action = "Dodanie"
                 towar = Towar(name= nazwa,
                               ilosc= ilosc,
                               categoria_id= kategoria,
                               osoba_wprowadzajaca = osoba_wprowadzajaca,
                                uwagi= uwagi)
                 towar.save()
+                id_commodity = towar.id
+                log = Log(username=username,action=action,commodity=commodity,id_commodity=id_commodity)
+                log.save() 
             except Exception as e:
                 print e
                 return HttpResponse(e.message)
@@ -137,6 +155,12 @@ def dodanie_nowego_towaru(request):
         return HttpResponse("OK")
     else:
         return HttpResponse("Nie jest zalogowany")    
+ 
+ 
+def lista_logi(request):
+     logi = Log.objects.all()
+     return render(request,'lista_logi.html',{'listalogi': logi})
+ 
     
 def dane_uzytkownika(request):
        return render(request,'dane_uzytkownika.html')

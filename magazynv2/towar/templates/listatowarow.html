@@ -19,14 +19,14 @@
      </thead>
      <tbody id=myTable>
      {% for lista in listatowarow %}
-      <tr>
+      <tr element-id="{{ lista.pk }}">
         <td>{{lista.name}}</td>
         <td>{{lista.ilosc}}</td>
         <td>{{lista.data_wprowadzenia}}</td>
         <td>{{lista.osoba_wprowadzajaca}}</td>
         <td>{{lista.uwagi}}</td>
         {% if user.is_authenticated %}
-        <td><a class="btn btn-danger" href="?pk={{ lista.pk }} "><i class="fa fa-trash-o fa-lg"></i> USUN!</a></td>
+        <td><button class="btn btn-danger remove-button"  ><i class="fa fa-trash-o fa-lg"></i> USUN!</button></td>
         {% endif %}
       </tr>
       {% endfor %}

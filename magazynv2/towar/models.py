@@ -35,3 +35,17 @@ class Towar(models.Model):
     def __unicode__(self):
         return self.name
      
+     
+class Log(models.Model):
+    username = models.CharField('username',max_length=100)
+    action = models.CharField('action',max_length=100)
+    commodity = models.CharField('commodity',max_length=100)
+    id_commodity = models.IntegerField('id_commodity')
+    data_action = models.DateTimeField('data_action',default=timezone.now)
+    
+    class Meta:
+        verbose_name = "Log"
+        verbose_name_plural = "Logi"
+        
+    def __unicode__(self):
+        return self.action

@@ -1,5 +1,8 @@
 function init()
 	{
+	
+	$(".remove-button").on("click", onRemoveClick);
+	
 	$("#formHasloUzytkownik").on("click",onZmianaHasla);
 	
 	$("#formDodajTowar").on("click",onDodajTowarClick);
@@ -10,6 +13,28 @@ function init()
 	
 	$("#wyloguj").on("click",onWyloguj);
 	}
+
+function onRemoveClick(e){
+	var $this = $(this);
+	var $tr = $this.parents("tr");
+	var id = $tr.attr("element-id");
+	var date={};
+	date["id"]=id;
+	$.ajax({
+		url: "remove",
+		type: "POST",
+		data: date
+	}).done(onRemoveClickSuccess);
+};
+
+function onRemoveClickSuccess(resp){
+	if (resp=="OK"){
+		zm = window.location.origin;
+		window.location.href = zm+"";
+	}
+		
+
+}
 
 function onWyloguj(e){
 	e.preventDefault();
@@ -22,7 +47,8 @@ function onWyloguj(e){
 };
 
 function onWylogujSucess(resp){
-	window.location.href = "http://127.0.0.1:8000/";
+	zm = window.location.origin;
+	window.location.href = zm+"";
 	};
 
 function onLogowanie(e){
@@ -31,15 +57,21 @@ function onLogowanie(e){
 	var $inputs = $("#logowanie input");
 	var data={};
 	$inputs.removeClass("error-validation");
+	$('#loginBlad').removeClass().text("");
+	$('#hasloBlad').removeClass().text("");
 	$inputs.each(function(){
 		var $this = $(this);
 		var name = $this.attr("name");
-		if(name=="login" && $this.val()=="")
+		if(name=="login" && $this.val()==""){
 			$this.addClass("error-validation");
-		else if (name=="haslo" && $this.val()=="")
+			$('#loginBlad').addClass("square").text("Login jest polem wymaganym");
+			console.log($("#loginBlad").get())
+		}	
+		if (name=="haslo" && $this.val()==""){
 			$this.addClass("error-validation");
-		else
-			data[name]=$this.val();
+			$('#hasloBlad').append('<div class="square"> Haslo jest polem wymaganym</div>');
+		}	
+		data[name]=$this.val();
 	});
 	if ($inputs.filter(".error-validation").length)
 		return
@@ -51,8 +83,11 @@ function onLogowanie(e){
 };
 function onLogowanieSucess(resp){
 	console.log(resp);
-	if(resp=="OK")
-		window.location.href = "http://127.0.0.1:8000/";
+	if(resp=="OK"){
+		zm = window.location.origin;
+		window.location.href = zm+"";
+	}
+		
 	else{
 		alert(resp);
 	}
@@ -90,7 +125,8 @@ function onEdycjaDaneUzytkownika(e){
 }
 
 function onEdycjaDaneSucess(resp){
-window.location.href = "http://127.0.0.1:8000/daneUzytkownika";
+	zm = window.location.origin;
+	window.location.href = zm+"/daneUzytkownika";
 };
 
 
@@ -123,7 +159,8 @@ function onDodajTowarClick(e){
 }
 
 function onDodajSucess(resp){
-	window.location.href = "http://127.0.0.1:8000/";
+	zm = window.location.origin
+	window.location.href = zm+"";
 }
 
 function onZmianaHasla(e)
@@ -158,8 +195,11 @@ function onZmianaHasla(e)
 function onEdycjaSucess(resp){
 	if (resp!="OK")
 		alert(resp);
-	else
-		window.location.href = "http://127.0.0.1:8000/daneUzytkownika";
+	else{
+		zm = window.location.origin;
+		window.location.href = zm+"/daneUzytkownika";
+	}
+		
 }
 
 $(window).on("load", init);

@@ -1,0 +1,28 @@
+{% extends 'poczatek.html' %}
+{% block content %}
+
+{% load bootstrap %}
+<div class="container-fluid">
+  <h1 id="listatowar" class="text-center">Lista logow</h1>
+  <table id="mydata" class="table table-striped table-bordered">
+    <thead>
+      <tr>
+        <th>login</th>
+        <th>akcja</th>
+        <th>info akcja</th>
+        <th>data</th> 
+      </tr>
+     </thead>
+     <tbody id=myTable>
+     {% for lista in listalogi %}
+      <tr>
+        <td>{{lista.username}}</td>
+        <td>{{lista.action}}</td>
+        <td>{{lista.commodity}}[{{lista.id_commodity}}]</td>
+        <td>{{lista.data_action}}</td>
+        </tr>
+      {% endfor %}
+     </tbody>
+  </table>
+</div>
+{% endblock content %}
