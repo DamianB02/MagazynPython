@@ -57,19 +57,19 @@ function onLogowanie(e){
 	var $inputs = $("#logowanie input");
 	var data={};
 	$inputs.removeClass("error-validation");
-	$('#loginBlad').removeClass().text("");
-	$('#hasloBlad').removeClass().text("");
+	$inputs.next(".komunikat").text("");
 	$inputs.each(function(){
 		var $this = $(this);
 		var name = $this.attr("name");
 		if(name=="login" && $this.val()==""){
 			$this.addClass("error-validation");
-			$('#loginBlad').addClass("square").text("Login jest polem wymaganym");
-			console.log($("#loginBlad").get())
+//			$('#loginBlad').addClass("square").text("Login jest polem wymaganym");
+			$this.next('.komunikat').text("Login jest polem wymaganym!").addClass("square");
 		}	
 		if (name=="haslo" && $this.val()==""){
 			$this.addClass("error-validation");
-			$('#hasloBlad').append('<div class="square"> Haslo jest polem wymaganym</div>');
+//			$('#hasloBlad').addClass("square").text(" Haslo jest polem wymaganym");
+			$this.next('.komunikat').text("Haslo jest polem wymaganym!").addClass("square");
 		}	
 		data[name]=$this.val();
 	});
@@ -82,14 +82,19 @@ function onLogowanie(e){
 	}).done(onLogowanieSucess);
 };
 function onLogowanieSucess(resp){
-	console.log(resp);
-	if(resp=="OK"){
-		zm = window.location.origin;
+	zm = window.location.origin;
+	if(resp=="OK"){	
 		window.location.href = zm+"";
-	}
-		
+	}	
 	else{
-		alert(resp);
+		var $inputs = $("#logowanie input");
+		var $this="";
+		$inputs.each(function(){
+			$this = $(this);
+			$this.addClass("error-validation");
+		});
+		var $zm = $inputs[$inputs.length-1];
+		$this.next('.komunikat').text("Zle dane logowania!").addClass("square");
 	}
 		
 	};
@@ -142,7 +147,6 @@ function onDodajTowarClick(e){
 		var name = $this.attr("name");
 		if (name=="nazwaTowaru" && $this.val()=="")
 			$this.addClass("error-validation");
-//			$this.next(".komunikat").text("Wymagane pole!").addClass("alert alert-danger");
 		else if(name=="ilosc" && $this.val()=="")
 			$this.addClass("error-validation")
 		else
