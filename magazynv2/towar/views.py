@@ -66,13 +66,14 @@ def zmiana_hasla(request):
         if request.method == "POST":
             try:
                 user = request.user
-                user2 = request.user
-                if user.password==user2.password:  
+                stare_haslo= request.POST.get("stareHaslo");
+                if user.check_password(stare_haslo):  
                     user.set_password(request.POST.get("noweHaslo"))   
                     user.save()
                     u = authenticate(username=user.username, password=request.POST.get("noweHaslo"))
-                if u is not None:
-                    login(request, u)
+                    if u is not None:
+                        login(request, u)
+                        return HttpResponse("OK")
                 else:
                     return HttpResponse("Niepoprawne haslo")
             except Exception as e:

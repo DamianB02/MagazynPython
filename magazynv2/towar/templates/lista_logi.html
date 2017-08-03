@@ -4,7 +4,7 @@
 {% load bootstrap %}
 <div class="container-fluid">
   <h1 id="listatowar" class="text-center">Lista logow</h1>
-  <table id="mydata" class="table table-striped table-bordered">
+  <table id="tablicalogi" class="table table-striped table-bordered">
     <thead>
       <tr>
         <th>login</th>
@@ -25,4 +25,9 @@
      </tbody>
   </table>
 </div>
+<script>
+$('#tablicalogi').dataTable({
+    "order": [[ 3, "desc" ]]
+} );
+</script>
 {% endblock content %}

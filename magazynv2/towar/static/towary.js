@@ -103,21 +103,43 @@ function onEdycjaDaneUzytkownika(e){
 	e.preventDefault();
 	e.stopPropagation();
 	var $inputs = $("#daneUzytkownik input");
+	$inputs.next('.komunikat').text("");
 	var data={};
 	$inputs.removeClass("error-validation");
 	$inputs.each(function(){
 		var $this = $(this);
 		var name = $this.attr("name");
-		if(name == "email" && /[a-zA-Z0-9]+@[a-zA-Z0-9]+\.[a-zA-Z]+/.test($this.val()))
-			data[name]=$this.val();
-		else if (name=="email"){
-			$this.addClass("error-validation");
+		if(name == "email"){
+			if($this.val()==""){
+				$this.addClass("error-validation");
+				$this.next(".komunikat").text("Email jest polem wymaganym!").addClass("square");
+			}
+			else if(/[a-zA-Z0-9]+@[a-zA-Z0-9]+\.[a-zA-Z]+/.test($this.val())==false){
+				$this.addClass("error-validation");
+				$this.next(".komunikat").text("Email jest niepoprawny!").addClass("square");
+			}
 		}
-		else if(name=="imie" && /[0-9]+/.test($this.val()))
-			$this.addClass("error-validation");
-		else if(name=="nazwisko" && /[0-9]+/.test($this.val()))
-			$this.addClass("error-validation");
-		else data[name]=$this.val();
+		if(name=="imie"){
+			if($this.val()==""){
+				$this.addClass("error-validation");
+				$this.next(".komunikat").text("Imie jest polem wymaganym!").addClass("square");
+			}
+			else if(/[0-9]+/.test($this.val())){
+				$this.addClass("error-validation");
+				$this.next(".komunikat").text("Imie nie moze zawierac cyfr!").addClass("square");
+			}
+		} 
+		if(name=="nazwisko"){
+			if($this.val()==""){
+				$this.addClass("error-validation");
+				$this.next(".komunikat").text("Nazwisko jest polem wymaganym!").addClass("square");
+			}
+			else if(/[0-9]+/.test($this.val())){
+				$this.addClass("error-validation");
+				$this.next(".komunikat").text("Nazwisko nie moze zawierac cyfr!").addClass("square");
+			}
+		} 
+		data[name]=$this.val();
 			
 	});
 	if ($inputs.filter(".error-validation").length)
@@ -140,21 +162,37 @@ function onDodajTowarClick(e){
 	e.stopPropagation();
 	var $inputs = $("#dodajTowar input");
 	$inputs.removeClass("error-validation");
-	var $select =$("#dodajTowar option:selected");
+	$inputs.next(".komunikat").text("");
+	var $select =$("#dodajTowar select");
+	$select.removeClass("error-validation");
+	$select.next(".komunikat").text("");
 	var data={};
 	$inputs.each(function(){
 		var $this = $(this);
 		var name = $this.attr("name");
-		if (name=="nazwaTowaru" && $this.val()=="")
+		if (name=="nazwaTowaru" && $this.val()==""){
 			$this.addClass("error-validation");
-		else if(name=="ilosc" && $this.val()=="")
-			$this.addClass("error-validation")
+			$this.next('.komunikat').text("Nazwa towaru jest polem wymaganym!").addClass("square");
+		}
+		if(name=="ilosc" && $this.val()==""){
+			$this.addClass("error-validation");
+			$this.next('.komunikat').text("Ilosc jest polem wymaganym!").addClass("square");
+		}	
 		else
 			data[name]=$this.val();
 	});
+	if ($select.val()==0){
+		$select.addClass("error-validation");
+		$select.next('.komunikat').text("Kategoria jest polem wymaganym!").addClass("square");
+	}
+	else{
+		data["kategoria"]= $select.val();
+	}
 	if ($inputs.filter(".error-validation").length)
 		return
-	data["kategoria"]= $select.val();
+	if ($select.filter(".error-validation").length)
+		return
+	
 	$.ajax({
 		url:"dodanieNowegoTowaru",
 		type:"POST",
@@ -173,21 +211,44 @@ function onZmianaHasla(e)
 	e.stopPropagation();
 	var $inputs = $("#hasloUzytkownik input");
 	$inputs.removeClass("error-validation");
+	$inputs.next(".komunikat").text("");
 	var data={};
 	$inputs.each(function(){
 		var $this = $(this);
 		var name = $this.attr("name");
-		if (name=="stareHaslo" && $this.val()=="")
+		if (name=="stareHaslo" && $this.val()==""){
 			$this.addClass("error-validation");
-		else if (name=="noweHaslo" && ($this.val()=="" || $this.val()==data["stareHaslo"]))
-			$this.addClass("error-validation");
-		else if (name=="powtorzHaslo" && ($this.val()=="" || $this.val()==data["stareHaslo"] || $this.val()!=data["noweHaslo"]))
-			$this.addClass("error-validation");
-		else
-			data[name]=$this.val();
+			$this.next('.komunikat').text("Stare haslo jest polem wymaganym!").addClass("square");
+		}			
+		if (name=="noweHaslo"){
+			if($this.val()==""){
+				$this.addClass("error-validation");
+				$this.next('.komunikat').text("Nowe haslo jest polem wymaganym!").addClass("square");
+			}
+			else if($this.val()==data["stareHaslo"]){
+				$this.addClass("error-validation");
+				$this.next('.komunikat').text("Nowe haslo musi byc inne od hasla powyzej!").addClass("square");
+			}
+		}		
+		if (name=="powtorzHaslo"){
+			if($this.val()==""){
+				$this.addClass("error-validation");
+				$this.next('.komunikat').text("Powtorz haslo jest polem wymaganym!").addClass("square");
+			}
+			else if($this.val()==data["stareHaslo"]){
+				$this.addClass("error-validation");
+				$this.next('.komunikat').text("Powtorz haslo musi byc rozne od starego hasla!").addClass("square");
+			}
+			else if($this.val()!=data["noweHaslo"]){
+				$this.addClass("error-validation");
+				$this.next('.komunikat').text("Powtorz haslo musi byc takie same jak nowe haslo!").addClass("square");
+			}
+		}
+		data[name]=$this.val();
 	});
 	if ($inputs.filter(".error-validation").length)
 		return
+		console.log(data);
 	$.ajax({
 		url:"zmianaHasla",
 		type:"POST",
@@ -197,11 +258,19 @@ function onZmianaHasla(e)
 }
 
 function onEdycjaSucess(resp){
-	if (resp!="OK")
-		alert(resp);
+	if (resp=="OK"){
+		zm = window.location.origin
+		window.location.href = zm+"/formUzytkownik";
+	}
 	else{
-		zm = window.location.origin;
-		window.location.href = zm+"/daneUzytkownika";
+		var $inputs = $("#hasloUzytkownik input");
+		var $this="";
+		$inputs.each(function(){
+			$this = $(this);
+			$this.addClass("error-validation");
+		});
+		var $zm = $inputs[$inputs.length-1];
+		$this.next('.komunikat').text("Zle wprowadzone dane!").addClass("square");
 	}
 		
 }
