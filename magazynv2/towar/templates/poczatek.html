@@ -7,10 +7,14 @@
 <link href='{% static "towary.css" %}' rel="stylesheet">
 
 <script src='{% static "jquery-3.2.1.min.js" %}'></script>
+<!--[if lte IE 8]><script language="javascript" type="text/javascript" src="excanvas.js"></script><![endif]-->
+<script type="text/javascript" src='{% static "flot/jquery.flot.js" %}'></script>
+<script type="text/javascript" src='{% static "flot/jquery.flot.time.min.js" %}'></script>
 <script src='{% static "js/jquery.dataTables.min.js" %}'></script>
 <script src='{% static "js/dataTables.bootstrap.min.js" %}'></script>
 <script src='{% static "js/bootstrap.min.js" %}'></script>
 <script src='{% static "towary.js" %}'></script>
+<script src='{% static "wykres.js" %}'></script>
 <script>$.ajaxSetup({data:{csrfmiddlewaretoken:"{{csrf_token}}"}})</script>
 
 

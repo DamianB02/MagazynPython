@@ -1,13 +1,14 @@
 from django.contrib.auth import authenticate, login , logout
 from django.contrib.auth.models import  User
 from django.http import HttpResponseRedirect
-from django.http.response import HttpResponse
+from django.http.response import HttpResponse, JsonResponse
 from django.shortcuts import render, get_object_or_404
 from django.template.context_processors import request
 from django.utils import timezone
 import re
-
+import json
 from towar.models import *
+from django.core import serializers
 
 
 def index(request):
@@ -22,6 +23,11 @@ def index(request):
 #         users = paginator.page(paginator.num_pages)
     return render(request,'listatowarow.html',{'listatowarow': lista_towarow})
 
+
+def dane_wykres(request):
+    data = Log.objects.all()
+    dane = serializers.serialize('json',data)
+    return HttpResponse(dane, content_type="application/json");
 
 def remove(request):
     if request.user.is_authenticated():
