@@ -9,7 +9,12 @@ import re
 import json
 from towar.models import *
 from django.core import serializers
-
+from reportlab.pdfgen import canvas
+from reportlab.lib.pagesizes import A4
+from reportlab.pdfbase import pdfmetrics
+from reportlab.pdfbase.ttfonts import TTFont
+from reportlab.platypus import Table, TableStyle, Paragraph
+from openpyxl import Workbook
 
 def index(request):
     lista_towarow = Towar.objects.all()
@@ -133,6 +138,80 @@ def zmiana_dane_uzytkownik(request):
         return HttpResponse("OK")
     else:
         return HttpResponse("Nie jest zalogowany")
+
+
+def przesylanie_pdf(request):
+    if request.user.is_authenticated():
+        pdfmetrics.registerFont(TTFont('Arial', 'arial.ttf'))
+        c = canvas.Canvas('plik.pdf',pagesize=A4)
+        width, height = A4 
+        user = User.objects.all()
+        produkty = Towar.objects.all()
+        dane={}
+        usun=0
+        dodaj=0
+        akcja = Log.objects.all()
+        licznik=0
+        for k in user:
+            usun=0
+            dodaj=0
+            for i in akcja:
+                if k.username==i.username:
+                    if i.action=="Usuniecie":
+                        usun=usun+1
+                        dane[k.username]={"usuniecie":usun,"dodanie":dodaj}
+                    else:
+                        dodaj=dodaj+1
+                        dane[k.username]={"usuniecie":usun,"dodanie":dodaj}
+            licznik=licznik+1
+        minus=120 
+        c.setFont("Arial", 14)
+        c.drawString(40,(height-minus), "Tabela ile kto dodaje")
+        minus += 40
+        data=[]
+        for key, value in dane.iteritems():
+            data.append([str(key)+":","ilosc dodan:"+str(value["dodanie"]),"ilosc usuniec:"+str(value["usuniecie"])])
+        
+        tt=Table(data)
+        w, h = tt.wrapOn(c,400,100)
+        tt.drawOn(c, 50, (height-minus))   
+        minus+=w
+        c.setFont("Arial", 14)
+        c.drawString(40,(height-minus), "Tabela towarow")
+        minus += w+20
+        tablicatowarow=[]
+        for p in produkty:
+            tablicatowarow.append([p.name,p.ilosc,p.osoba_wprowadzajaca])
+        tt2 = Table(tablicatowarow)
+        w, h = tt2.wrapOn(c,400,100)
+        tt2.drawOn(c, 50, (height-minus))   
+        c.showPage()
+        c.save()
+    return HttpResponseRedirect("/")
+
+
+def import_xlsx(request):
+    if request.user.is_authenticated():
+        lista_towarow = Towar.objects.all();
+        book = Workbook()
+        sheet = book.active
+        
+        rows = (
+            (88, 46, 57),
+            (89, 38, 12),
+            (23, 59, 78),
+            (56, 21, 98),
+            (24, 18, 43),
+            (34, 15, 67)
+        )
+        print rows
+        print lista_towarow
+        sheet.append(["Nazwa towaru","Ilosc","Osoba wprowadzajaca"])
+        for row in lista_towarow:
+            sheet.append([row.name,row.ilosc,str(row.osoba_wprowadzajaca)])
+        
+        book.save('test.xlsx')
+    return HttpResponseRedirect("/")
 
 def dodanie_nowego_towaru(request):
     if request.user.is_authenticated():

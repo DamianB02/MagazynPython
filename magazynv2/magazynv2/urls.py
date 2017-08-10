@@ -7,6 +7,8 @@ urlpatterns = [
     # Examples:
     # url(r'^$', 'magazynv2.views.home', name='home'),
     # url(r'^blog/', include('blog.urls')),
+    url(r'^import$', 'towar.views.import_xlsx', name = 'import'),
+    url(r'^raport$', 'towar.views.przesylanie_pdf', name = 'raport'),
     url(r'^daneWykres$', 'towar.views.dane_wykres', name = 'daneWykres'),
     url(r'^listaLogi$', 'towar.views.lista_logi', name = 'listaLogi'),
     url(r'^remove$', 'towar.views.remove', name = 'remove'),
