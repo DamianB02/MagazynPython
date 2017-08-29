@@ -40,6 +40,7 @@ INSTALLED_APPS = (
     'towar',
      'bootstrapform',
      'magazynv2',
+     'rest_framework',
 )
 
 MIDDLEWARE_CLASSES = (

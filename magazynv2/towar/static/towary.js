@@ -11,9 +11,123 @@ function init()
 	
 	$("#formLogin").on("click",onLogowanie);
 	
+	$("#buttonExport").on("click",onExport);
+	
+	$("#buttonImport").on("click",onImport)
+	
 	$("#wyloguj").on("click",onWyloguj);
 	}
 
+
+function onImport(e){
+	e.preventDefault();
+	e.stopPropagation();
+	var $inputs = $("#import input");
+	var $button = $("#import button");
+	var data={};
+	$inputs.removeClass("error-validation");
+//	$inputs.next(".komunikat").text("");
+	var form = new FormData();
+	var csrftoken = getCookie('csrftoken');
+	form.append("csrfmiddlewaretoken", csrftoken);
+	$inputs.each(function(){
+		var $this = $(this);
+		var name = $this.attr("name");
+		if(name=="nazwaPliku"){
+			if($this.val()==""){
+				$this.addClass("error-validation");
+//				$('#loginBlad').addClass("square").text("Login jest polem wymaganym");
+				$button.next('.komunikat').text("Nazwa pliku jest polem wymaganym!").addClass("square");
+			}
+			else if(/[a-zA-Z0-9]+\.[x]+[l]+[s]+[x]/.test($this.val())==false){
+				$this.addClass("error-validation");
+//				$('#loginBlad').addClass("square").text("Login jest polem wymaganym");
+				$button.next('.komunikat').text("Nazwa pliku musi miec rozszerzenie .xlsx!").addClass("square");
+			}
+			
+		}	
+//		if (name=="haslo" && $this.val()==""){
+//			$this.addClass("error-validation");
+////			$('#hasloBlad').addClass("square").text(" Haslo jest polem wymaganym");
+//			$this.next('.komunikat').text("Haslo jest polem wymaganym!").addClass("square");
+//		}	
+		data[name]=$this.val();
+		var file = $inputs[0].files[0];
+	    if(!file)
+	      return
+	    form.append('file', file);
+	});
+	if ($inputs.filter(".error-validation").length)
+		return
+	$.ajax({
+		url: "import",
+		type: "POST",
+		data: form,
+		processData: false,
+	    contentType: false,
+	}).done(onImportSuccess);
+};
+
+
+function getCookie(cname) {
+    var name = cname + "=";
+    var decodedCookie = decodeURIComponent(document.cookie);
+    var ca = decodedCookie.split(';');
+    for(var i = 0; i <ca.length; i++) {
+        var c = ca[i];
+        while (c.charAt(0) == ' ') {
+            c = c.substring(1);
+        }
+        if (c.indexOf(name) == 0) {
+            return c.substring(name.length, c.length);
+        }
+    }
+    return "";
+};
+
+
+function onImportSuccess(e){
+//	zm = window.location.origin;
+//	window.location.href = zm+"/importexport";
+}
+
+
+function onExport(e){
+	e.preventDefault();
+	e.stopPropagation();
+	var $inputs = $("#export input");
+	var $button = $("#export button");
+	var data={};
+	$inputs.removeClass("error-validation");
+//	$inputs.next(".komunikat").text("");
+	$inputs.each(function(){
+		var $this = $(this);
+		var name = $this.attr("name");
+		if(name=="nazwaPliku" && $this.val()==""){
+			$this.addClass("error-validation");
+//			$('#loginBlad').addClass("square").text("Login jest polem wymaganym");
+			$button.next('.komunikat').text("Nazwa pliku jest polem wymaganym!").addClass("square");
+		}	
+//		if (name=="haslo" && $this.val()==""){
+//			$this.addClass("error-validation");
+////			$('#hasloBlad').addClass("square").text(" Haslo jest polem wymaganym");
+//			$this.next('.komunikat').text("Haslo jest polem wymaganym!").addClass("square");
+//		}	
+		data[name]=$this.val();
+	});
+	if ($inputs.filter(".error-validation").length)
+		return
+	$.ajax({
+		url: "export",
+		type: "POST",
+		data: data
+	}).done(onExportSuccess);
+};
+
+function onExportSuccess(e){
+	zm = window.location.origin;
+	window.location.href = zm+"/importexport";
+}
 function onRemoveClick(e){
 	var $this = $(this);
 	var $tr = $this.parents("tr");
@@ -248,7 +362,6 @@ function onZmianaHasla(e)
 	});
 	if ($inputs.filter(".error-validation").length)
 		return
-		console.log(data);
 	$.ajax({
 		url:"zmianaHasla",
 		type:"POST",

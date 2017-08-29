@@ -1,0 +1,32 @@
+{% extends 'poczatek.html' %}
+{% block content %}
+{% load bootstrap %}
+<div class="container-fluid">
+  <h1  class=text-center >Export </h1> 
+  <form class="form-horizontal" id="export" role="form">
+    <div class="form-group">
+      <label  class="col-md-2 control-label">Nazwa pliku:</label>
+      <div class="form-inline col-md-3">
+          <input type="text" class="form-control" id="nazwaPliku" name="nazwaPliku" placeholder="Nazwa pliku">
+          <button id="buttonExport" class="save btn btn-default">Export</button>
+          <div class="komunikat"></div>
+        </div>
+          
+      </div>
+    </div>
+</form>
+ <div class="container-fluid">
+  <h1  class=text-center >Import</h1> 
+  <form id="import" class="form-horizontal" action="..." enctype="multipart/form-data">
+    <div class="form-group">
+      <label  class="col-md-2 control-label">Nazwa pliku:</label>
+      <div class="form-inline col-md-4">
+        <input class="form-control" type="file" id ="nazwaPlikuImport" name="nazwaPlikuImport" />
+        <button id="buttonImport" class="save btn btn-default">Import</button>
+        <div class="komunikat"></div>
+      </div>
+    </div>
+</form>
+</div> 
+
+{% endblock content %}

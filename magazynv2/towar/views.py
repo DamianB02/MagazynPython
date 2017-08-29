@@ -14,7 +14,58 @@ from reportlab.lib.pagesizes import A4
 from reportlab.pdfbase import pdfmetrics
 from reportlab.pdfbase.ttfonts import TTFont
 from reportlab.platypus import Table, TableStyle, Paragraph
-from openpyxl import Workbook
+from openpyxl import Workbook,load_workbook
+
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import status
+from .serializers import *
+from rest_framework.parsers import JSONParser
+from rest_framework.decorators import api_view
+
+
+@api_view(['GET', 'POST'])
+def TowarList(request):
+    
+    if request.method == 'GET':
+        towar = Towar.objects.all()
+        serialiser = TowarSerializer(towar, many=True)
+        return Response(serialiser.data)
+        
+    elif request.method == 'POST':
+        towar = JSONParser().parse(request)
+        serializer = TowarSerializer(data=towar)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(['GET', 'PUT','DELETE'])
+def towar_detail(request, pk):
+  
+    try:
+        towar= Towar.objects.get(pk=pk)
+    except Towar.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+  
+    if request.method == 'GET':
+        serializer = TowarSerializer(towar)
+        return Response(serializer.data)
+  
+    elif request.method == 'PUT':
+        data = JSONParser().parse(request)
+        serializer = TowarSerializer(towar, data=data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+  
+    elif request.method == 'DELETE':
+        towar.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+      
+#      
 
 def index(request):
     lista_towarow = Towar.objects.all()
@@ -190,27 +241,44 @@ def przesylanie_pdf(request):
     return HttpResponseRedirect("/")
 
 
+
+def import_export_xlsx(request):
+    if request.user.is_superuser:          
+            return render(request,'importexport.html')
+    return HttpResponseRedirect("/")
+  
+  
+  
+  
 def import_xlsx(request):
+    if request.user.is_authenticated():
+        tab = []
+        i=0;
+        ws = load_workbook(request.FILES.get("file"))
+        for sheet in ws:
+            for row in sheet:
+                tab[i]
+                print row[0].value
+    return HttpResponse("OK")  
+
+def export_xlsx(request):
     if request.user.is_authenticated():
         lista_towarow = Towar.objects.all();
         book = Workbook()
-        sheet = book.active
         
-        rows = (
-            (88, 46, 57),
-            (89, 38, 12),
-            (23, 59, 78),
-            (56, 21, 98),
-            (24, 18, 43),
-            (34, 15, 67)
-        )
-        print rows
-        print lista_towarow
-        sheet.append(["Nazwa towaru","Ilosc","Osoba wprowadzajaca"])
+        towar = book.active
+        
+        towar.title = "Towar"
+        
+        print  book.sheetnames
+        towar.append(["Nazwa towaru","Ilosc","Data dodania","Id kategorii","Osoba wprowadzajaca","Uwagi"])
         for row in lista_towarow:
-            sheet.append([row.name,row.ilosc,str(row.osoba_wprowadzajaca)])
+            towar.append([row.name,row.ilosc,str(row.data_wprowadzenia),row.categoria_id,str(row.osoba_wprowadzajaca),row.uwagi])
+        plik=request.POST.get("nazwaPliku")
+        bla = book.create_sheet("dupa")
+        print  book.sheetnames
+        book.save(plik+'.xlsx')
         
-        book.save('test.xlsx')
     return HttpResponseRedirect("/")
 
 def dodanie_nowego_towaru(request):
